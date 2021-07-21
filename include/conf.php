@@ -182,10 +182,10 @@ define('TIMEOUT_CHECK_ACTIVITY', true);
 // Page protect conf end
 
 // PM special folder IDs
-define (PM_FOLDERID_INBOX, -1);
-define (PM_FOLDERID_OUTBOX, -2);
-define (PM_FOLDERID_SYSTEM, -3);
-define (PM_FOLDERID_MOD, -4);
+define ('PM_FOLDERID_INBOX', -1);
+define ('PM_FOLDERID_OUTBOX', -2);
+define ('PM_FOLDERID_SYSTEM', -3);
+define ('PM_FOLDERID_MOD', -4);
 
 $GLOBALS["PM_PRUNE_DAYS"] = 10;
 ?>
