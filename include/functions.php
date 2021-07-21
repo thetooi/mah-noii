@@ -95,9 +95,9 @@ function userlogin() {
     unset($GLOBALS["CURUSER"]);
 
     $ip = getip();
-	$nip = ip2long($ip);
-    $res = mysql_query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
-    if (mysql_num_rows($res) > 0)
+    $nip = ip2long($ip);
+    $res = $mysqli->query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
+    if ($res->num_rows > 0)
     {
       header("HTTP/1.0 403 Forbidden");
       echo("<html><body><h1>403 Forbidden</h1>Unauthorized IP address.</body></html>\n");
@@ -109,14 +109,14 @@ function userlogin() {
      $id = (int) $_COOKIE["uid"];
       if (!$id || !preg_match('/[a-f0-9]{32}/', $_COOKIE["pass"]) )
         return;
-    $res = mysql_query("SELECT * FROM users WHERE id = $id AND enabled='yes' AND status = 'confirmed'");// or die(mysql_error());
-    $row = mysql_fetch_array($res);
+    $res = $mysqli->query("SELECT * FROM users WHERE id = $id AND enabled='yes' AND status = 'confirmed'");// or die($mysqli->error);
+    $row = $res->fetch_array();
     if (!$row)
         return;
     $sec = hash_pad($row["secret"]);
     if ($_COOKIE["pass"] !== $row["passhash"])
         return;
-    mysql_query("UPDATE users SET last_access='" . get_date_time() . "', ip=".sqlesc($ip)." WHERE id=" . $row["id"]);// or die(mysql_error());
+    $mysqli->query("UPDATE users SET last_access='" . get_date_time() . "', ip=".sqlesc($ip)." WHERE id=" . $row["id"]);// or die($mysqli->error);
     $row['ip'] = $ip;
     $GLOBALS["CURUSER"] = $row;
 }
@@ -127,17 +127,17 @@ function autoclean() {
     $now = time();
     $docleanup = 0;
 
-    $res = mysql_query("SELECT value_u FROM avps WHERE arg = 'lastcleantime'");
-    $row = mysql_fetch_array($res);
+    $res = mysqli_query($mysqli,"SELECT value_u FROM avps WHERE arg = 'lastcleantime'");
+    $row = mysqli_fetch_array($res);
     if (!$row) {
-        mysql_query("INSERT INTO avps (arg, value_u) VALUES ('lastcleantime',$now)");
+        mysqli_query($mysqli,"INSERT INTO avps (arg, value_u) VALUES ('lastcleantime',$now)");
         return;
     }
     $ts = $row[0];
     if ($ts + $autoclean_interval > $now)
         return;
-    mysql_query("UPDATE avps SET value_u=$now WHERE arg='lastcleantime' AND value_u = $ts");
-    if (!mysql_affected_rows())
+    mysqli_query($mysqli,"UPDATE avps SET value_u=$now WHERE arg='lastcleantime' AND value_u = $ts");
+    if (!mysqli_affected_rows($mysqli))
         return;
 
     docleanup();
