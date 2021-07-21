@@ -96,8 +96,8 @@ function userlogin() {
 
     $ip = getip();
     $nip = ip2long($ip);
-    $res = $mysqli->query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
-    if ($res->num_rows > 0)
+    $res = mysqli_query($mysqli,"SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
+    if (mysqli_num_rows($res) > 0)
     {
       header("HTTP/1.0 403 Forbidden");
       echo("<html><body><h1>403 Forbidden</h1>Unauthorized IP address.</body></html>\n");
@@ -109,14 +109,14 @@ function userlogin() {
      $id = (int) $_COOKIE["uid"];
       if (!$id || !preg_match('/[a-f0-9]{32}/', $_COOKIE["pass"]) )
         return;
-    $res = $mysqli->query("SELECT * FROM users WHERE id = $id AND enabled='yes' AND status = 'confirmed'");// or die($mysqli->error);
-    $row = $res->fetch_array();
+    $res = mysqli_query($mysqli,"SELECT * FROM users WHERE id = $id AND enabled='yes' AND status = 'confirmed'");// or die(mysqli_error($mysqli));
+    $row = mysqli_fetch_array($res);
     if (!$row)
         return;
     $sec = hash_pad($row["secret"]);
     if ($_COOKIE["pass"] !== $row["passhash"])
         return;
-    $mysqli->query("UPDATE users SET last_access='" . get_date_time() . "', ip=".sqlesc($ip)." WHERE id=" . $row["id"]);// or die($mysqli->error);
+    mysqli_query($mysqli,"UPDATE users SET last_access='" . get_date_time() . "', ip=".sqlesc($ip)." WHERE id=" . $row["id"]);// or die(mysqli_error($mysqli));
     $row['ip'] = $ip;
     $GLOBALS["CURUSER"] = $row;
 }
