@@ -643,14 +643,14 @@ function format_comment($text, $strip_html = true) {
 	return $s;
 }
 
-define (UC_PEASANT, 0);
-define (UC_USER, 1);
-define (UC_POWER_USER, 2);
-define (UC_VIP, 3);
-define (UC_UPLOADER, 4);
-define (UC_MODERATOR, 5);
-define (UC_ADMINISTRATOR, 6);
-define (UC_SYSOP, 7);
+define ('UC_PEASANT', 0);
+define ('UC_USER', 1);
+define ('UC_POWER_USER', 2);
+define ('UC_VIP', 3);
+define ('UC_UPLOADER', 4);
+define ('UC_MODERATOR', 5);
+define ('UC_ADMINISTRATOR', 6);
+define ('UC_SYSOP', 7);
 
 function get_user_class()
 {

@@ -66,22 +66,22 @@ function dbconn($autoclean = false)
 {
     global $mysql_host, $mysql_user, $mysql_pass, $mysql_db;
 
-    if (!@mysql_connect($mysql_host, $mysql_user, $mysql_pass))
+    if (!$mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass))
     {
-	  switch (mysql_errno())
-	  {
-		case 1040:
-		case 2002:
-			if ($_SERVER[REQUEST_METHOD] == "GET")
-				die("<html><head><meta http-equiv=refresh content=\"5 $_SERVER[REQUEST_URI]\"></head><body><table border=0 width=100% height=100%><tr><td><h3 align=center>The server load is very high at the moment. Retrying, please wait...</h3></td></tr></table></body></html>");
-			else
-				die("Too many users. Please press the Refresh button in your browser to retry.");
+      switch ($mysqli->errno)
+      {
+        case 1040:
+        case 2002:
+            if ($_SERVER[REQUEST_METHOD] == "GET")
+                die("<html><head><meta http-equiv=refresh content=\"5 $_SERVER[REQUEST_URI]\"></head><body><table border=0 width=100% height=100%><tr><td><h3 align=center>The server load is very high at the moment. Retrying, please wait...</h3></td></tr></table></body></html>");
+            else
+                die("Too many users. Please press the Refresh button in your browser to retry.");
         default:
-    	    die("[" . mysql_errno() . "] dbconn: mysql_connect: " . mysql_error());
+            die("[" . $mysqli->errno . "] dbconn: mysql_connect: " . $mysqli->error);
       }
     }
-    mysql_select_db($mysql_db)
-        or die('dbconn: mysql_select_db: ' + mysql_error());
+    $mysqli->select_db($mysql_db)
+        or die('dbconn: mysql_select_db: ' + $mysqli->error);
 
     userlogin();
 
@@ -1284,7 +1284,7 @@ foreach ($_GET as $check_url) {
 			(preg_match("#<[^>]*iframe*\"?[^>]*>#", $check_url)) || (preg_match("#<[^>]*applet*\"?[^>]*>#", $check_url)) ||
 			(preg_match("#<[^>]*meta*\"?[^>]*>#", $check_url)) || (preg_match("#<[^>]*style*\"?[^>]*>#", $check_url)) ||
 			(preg_match("#<[^>]*form*\"?[^>]*>#", $check_url)) || (preg_match("#\([^>]*\"?[^)]*\)#", $check_url)) ||
-			(preg_match("\"", $check_url))) {
+			(preg_match(""\"", $check_url))) {
 		die ();
 		}
 	}
