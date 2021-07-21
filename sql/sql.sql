@@ -908,5 +908,5 @@ CREATE TABLE `users` (
   KEY `enabled_notifs` (`enabled`,`notifs`),
   KEY `id_ip_passkey_enabled` (`ip`,`passkey`,`enabled`,`id`),
   KEY `id_class_downloaded` (`id`,`class`,`downloaded`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
