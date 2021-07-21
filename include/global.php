@@ -365,7 +365,7 @@ function sqlerr($file = '', $line = '', $mysqli)
     global $CURUSER;
     $fp=fopen('sqlerror.log', 'a+');
     $date=date('l dS \of F Y h:i:s A');
-    $error= "$date  - ".mysql_error()." in file ".$file.", line ".$line.". User: ".$CURUSER['username']." ID: ".$CURUSER['id'].". IP: ".getip()." [ get ip ] :: ".$_SERVER['REMOTE_ADDR']." [ reported remote address ] \r\n";
+    $error= "$date  - ".mysqli_error($mysqli)." in file ".$file.", line ".$line.". User: ".$CURUSER['username']." ID: ".$CURUSER['id'].". IP: ".getip()." [ get ip ] :: ".$_SERVER['REMOTE_ADDR']." [ reported remote address ] \r\n";
     fwrite($fp,$error);
     if (get_user_class() == UC_SYSOP)
        echo'<table border=0 bgcolor=blue align=left cellspacing=0 cellpadding=10 style=\'background: blue\'><tr><td class=embedded><font color=white><h1>SQL Error</h1><b>'.mysqli_error($mysqli) . ($file != '' && $line != '' ? '<p>in '.$file.', line '.$line.'</p>' : '') .'</b></font></td></tr></table>';
