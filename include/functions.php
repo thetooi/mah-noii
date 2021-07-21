@@ -91,9 +91,10 @@ function dbconn($autoclean = false)
 
 
 function userlogin() {
-    global $SITE_ONLINE;
+    global $SITE_ONLINE, $mysql_host, $mysql_user, $mysql_pass, $mysql_db;
     unset($GLOBALS["CURUSER"]);
 
+    $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass);
     $ip = getip();
     $nip = ip2long($ip);
     $res = mysqli_query($mysqli,"SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
@@ -122,11 +123,11 @@ function userlogin() {
 }
 
 function autoclean() {
-    global $autoclean_interval;
+    global $autoclean_interval, $mysql_host, $mysql_user, $mysql_pass, $mysql_db;
 
     $now = time();
     $docleanup = 0;
-
+    $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass);
     $res = mysqli_query($mysqli,"SELECT value_u FROM avps WHERE arg = 'lastcleantime'");
     $row = mysqli_fetch_array($res);
     if (!$row) {
