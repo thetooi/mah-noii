@@ -97,7 +97,7 @@ function userlogin() {
     $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass);
     $ip = getip();
     $nip = ip2long($ip);
-    $res = mysqli_query($mysqli,"SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
+    $res = mysqli_query($mysqli,"SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or die(mysqli_error($mysqli));
     if (mysqli_num_rows($res) > 0)
     {
       header("HTTP/1.0 403 Forbidden");
