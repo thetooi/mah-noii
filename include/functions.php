@@ -1289,6 +1289,6 @@ foreach ($_GET as $check_url) {
 		}
 	}
 }
-require "global.php";
-require "html.php";
+require_once "global.php";
+require_once "html.php";
 ?>
