@@ -1280,11 +1280,11 @@ function int_check($value,$stdhead = false, $stdfood = true, $die = true, $log =
 foreach ($_GET as $check_url) {
 	if (!is_array($check_url)) {
 		$check_url = str_replace("\"", "", $check_url);
-		if ((eregi("<[^>]*script*\"?[^>]*>", $check_url)) || (eregi("<[^>]*object*\"?[^>]*>", $check_url)) ||
-			(eregi("<[^>]*iframe*\"?[^>]*>", $check_url)) || (eregi("<[^>]*applet*\"?[^>]*>", $check_url)) ||
-			(eregi("<[^>]*meta*\"?[^>]*>", $check_url)) || (eregi("<[^>]*style*\"?[^>]*>", $check_url)) ||
-			(eregi("<[^>]*form*\"?[^>]*>", $check_url)) || (eregi("\([^>]*\"?[^)]*\)", $check_url)) ||
-			(eregi("\"", $check_url))) {
+		if ((preg_match("<[^>]*script*\"?[^>]*>", $check_url)) || (preg_match("<[^>]*object*\"?[^>]*>", $check_url)) ||
+			(preg_match("<[^>]*iframe*\"?[^>]*>", $check_url)) || (preg_match("<[^>]*applet*\"?[^>]*>", $check_url)) ||
+			(preg_match("<[^>]*meta*\"?[^>]*>", $check_url)) || (preg_match("<[^>]*style*\"?[^>]*>", $check_url)) ||
+			(preg_match("<[^>]*form*\"?[^>]*>", $check_url)) || (preg_match("\([^>]*\"?[^)]*\)", $check_url)) ||
+			(preg_match("\"", $check_url))) {
 		die ();
 		}
 	}
