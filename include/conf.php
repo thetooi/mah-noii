@@ -123,14 +123,14 @@ $invites = 3000;
 $maxusers = 5000;
 
 // ONLY USE ONE OF THE FOLLOWING DEPENDING ON YOUR O/S!!!
-$torrent_dir = "/home/yoursite/domains/yoursite.com/public_html/torrents";    # FOR UNIX ONLY - must be writable for httpd user
+$torrent_dir = "/var/www/vhosts/toui.cc/torrents";    # FOR UNIX ONLY - must be writable for httpd user
 //$torrent_dir = "C:/web/Apache2/htdocs/tbsource/torrents";    # FOR WINDOWS ONLY - must be writable for httpd user
 
 # the first one will be displayed on the pages
 $announce_urls = array();
-$announce_urls[] = "http://www.yoursite.com/announce.php";
-$announce_urls[] = "http://domain.com:82/announce.php";
-$announce_urls[] = "http://domain.com:83/announce.php";
+$announce_urls[] = "https://i.toui.cc/announce.php";
+$announce_urls[] = "https://i.toui.cc:82/announce.php";
+$announce_urls[] = "https://i.toui.cc:83/announce.php";
 
 if ($_SERVER["HTTP_HOST"] == "")                        // Root Based Installs Comment Out if in Sub-Dir
   $_SERVER["HTTP_HOST"] = $_SERVER["SERVER_NAME"];      // Comment out for Sub-Dir Installs
@@ -139,7 +139,7 @@ $BASEURL = "http://" . $_SERVER["HTTP_HOST"];           // Comment out for Sub-D
 //$BASEURL = 'http://domain.com';                       // Uncomment for Sub-Dir Installs - No Ending Slash
 
 // Set this to your site URL... No ending slash!
-$DEFAULTBASEURL = "http://www.yoursite.com";
+$DEFAULTBASEURL = "https://i.toui.cc";
 
 //set this to true to make this a tracker that only registered users may use
 $MEMBERSONLY = true;
@@ -149,13 +149,13 @@ $MEMBERSONLY = true;
 $PEERLIMIT = 50000;
 
 // Email for sender/return path.
-$SITEEMAIL = "yoursite@noreply.com";
+$SITEEMAIL = "yoursite@toui.cc";
 
-$SITENAME = "Yoursite";
-$TITLE = "Demo site";
+$SITENAME = "m@h~noii";
+$TITLE = "m@h~noii";
 
 //Directory for cache
-$CACHE = "/home/yoursite/domains/yoursite.com/public_html/cache"; # FOR UNIX ONLY - must be writable for httpd user
+$CACHE = "/var/www/vhosts/toui.cc/cache"; # FOR UNIX ONLY - must be writable for httpd user
 //$cache = "C:/Server/www/cache"; // for windows
 $autoclean_interval = 900;
 $pic_base_url = "/pic/";
