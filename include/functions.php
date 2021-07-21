@@ -1283,8 +1283,7 @@ foreach ($_GET as $check_url) {
 		if ((preg_match("#<[^>]*script*\"?[^>]*>#", $check_url)) || (preg_match("#<[^>]*object*\"?[^>]*>#", $check_url)) ||
 			(preg_match("#<[^>]*iframe*\"?[^>]*>#", $check_url)) || (preg_match("#<[^>]*applet*\"?[^>]*>#", $check_url)) ||
 			(preg_match("#<[^>]*meta*\"?[^>]*>#", $check_url)) || (preg_match("#<[^>]*style*\"?[^>]*>#", $check_url)) ||
-			(preg_match("#<[^>]*form*\"?[^>]*>#", $check_url)) || (preg_match("#\([^>]*\"?[^)]*\)#", $check_url)) ||
-			(preg_match(""\"", $check_url))) {
+			(preg_match("#<[^>]*form*\"?[^>]*>#", $check_url)) || (preg_match("#\([^>]*\"?[^)]*\)#", $check_url))) {
 		die ();
 		}
 	}
