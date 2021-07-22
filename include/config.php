@@ -39,7 +39,7 @@ define('TIME_NOW', time());
     $FMED['max_dead_torrent_time'] = 6 * 3600;
     $FMED['maxusers'] = 5000; // LoL Who we kiddin' here?
     $FMED['site_donate_mail']  = 'paypal@toui.cc';
-if ( strtoupper( substr(PHP_OS, 0, 3) ) == 'WIN' ){
+if ( strtoupper( substr(PHP_OS, 0, 3) ) == 'LINUX' ){
     $file_path = str_replace( "\\", "/", dirname(__FILE__) );
     $file_path = str_replace( "/include", "", $file_path );
     }else{
