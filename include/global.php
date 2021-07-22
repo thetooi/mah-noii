@@ -360,15 +360,15 @@ function stderr($heading, $text, $htmlstrip = FALSE)
   die;
 }
 
-function sqlerr($file = '', $line = '', $mysqli)
+function sqlerr($file = '', $line = '')
 {
     global $CURUSER;
     $fp=fopen('sqlerror.log', 'a+');
     $date=date('l dS \of F Y h:i:s A');
-    $error= "$date  - ".mysqli_error($mysqli)." in file ".$file.", line ".$line.". User: ".$CURUSER['username']." ID: ".$CURUSER['id'].". IP: ".getip()." [ get ip ] :: ".$_SERVER['REMOTE_ADDR']." [ reported remote address ] \r\n";
+    $error= "$date  - ".mysql_error()." in file ".$file.", line ".$line.". User: ".$CURUSER['username']." ID: ".$CURUSER['id'].". IP: ".getip()." [ get ip ] :: ".$_SERVER['REMOTE_ADDR']." [ reported remote address ] \r\n";
     fwrite($fp,$error);
     if (get_user_class() == UC_SYSOP)
-       echo'<table border=0 bgcolor=blue align=left cellspacing=0 cellpadding=10 style=\'background: blue\'><tr><td class=embedded><font color=white><h1>SQL Error</h1><b>'.mysqli_error($mysqli) . ($file != '' && $line != '' ? '<p>in '.$file.', line '.$line.'</p>' : '') .'</b></font></td></tr></table>';
+       echo'<table border=0 bgcolor=blue align=left cellspacing=0 cellpadding=10 style=\'background: blue\'><tr><td class=embedded><font color=white><h1>SQL Error</h1><b>'.mysql_error() . ($file != '' && $line != '' ? '<p>in '.$file.', line '.$line.'</p>' : '') .'</b></font></td></tr></table>';
     die;
 }
 
@@ -643,14 +643,14 @@ function format_comment($text, $strip_html = true) {
 	return $s;
 }
 
-define ('UC_PEASANT', 0);
-define ('UC_USER', 1);
-define ('UC_POWER_USER', 2);
-define ('UC_VIP', 3);
-define ('UC_UPLOADER', 4);
-define ('UC_MODERATOR', 5);
-define ('UC_ADMINISTRATOR', 6);
-define ('UC_SYSOP', 7);
+define (UC_PEASANT, 0);
+define (UC_USER, 1);
+define (UC_POWER_USER, 2);
+define (UC_VIP, 3);
+define (UC_UPLOADER, 4);
+define (UC_MODERATOR, 5);
+define (UC_ADMINISTRATOR, 6);
+define (UC_SYSOP, 7);
 
 function get_user_class()
 {

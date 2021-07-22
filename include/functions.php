@@ -66,22 +66,22 @@ function dbconn($autoclean = false)
 {
     global $mysql_host, $mysql_user, $mysql_pass, $mysql_db;
 
-    if (!$mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass))
+    if (!@mysql_connect($mysql_host, $mysql_user, $mysql_pass))
     {
-      switch ($mysqli->errno)
-      {
-        case 1040:
-        case 2002:
-            if ($_SERVER[REQUEST_METHOD] == "GET")
-                die("<html><head><meta http-equiv=refresh content=\"5 $_SERVER[REQUEST_URI]\"></head><body><table border=0 width=100% height=100%><tr><td><h3 align=center>The server load is very high at the moment. Retrying, please wait...</h3></td></tr></table></body></html>");
-            else
-                die("Too many users. Please press the Refresh button in your browser to retry.");
+	  switch (mysql_errno())
+	  {
+		case 1040:
+		case 2002:
+			if ($_SERVER[REQUEST_METHOD] == "GET")
+				die("<html><head><meta http-equiv=refresh content=\"5 $_SERVER[REQUEST_URI]\"></head><body><table border=0 width=100% height=100%><tr><td><h3 align=center>The server load is very high at the moment. Retrying, please wait...</h3></td></tr></table></body></html>");
+			else
+				die("Too many users. Please press the Refresh button in your browser to retry.");
         default:
-            die("[" . $mysqli->errno . "] dbconn: mysql_connect: " . $mysqli->error);
+    	    die("[" . mysql_errno() . "] dbconn: mysql_connect: " . mysql_error());
       }
     }
-    $mysqli->select_db($mysql_db)
-        or die('dbconn: mysql_select_db: ' + $mysqli->error);
+    mysql_select_db($mysql_db)
+        or die('dbconn: mysql_select_db: ' + mysql_error());
 
     userlogin();
 
@@ -91,14 +91,13 @@ function dbconn($autoclean = false)
 
 
 function userlogin() {
-    global $SITE_ONLINE, $mysql_host, $mysql_user, $mysql_pass, $mysql_db;
+    global $SITE_ONLINE;
     unset($GLOBALS["CURUSER"]);
 
-    $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass);
     $ip = getip();
-    $nip = ip2long($ip);
-    $res = mysqli_query($mysqli,"SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__, $mysqli);
-    if (mysqli_num_rows($res) > 0)
+	$nip = ip2long($ip);
+    $res = mysql_query("SELECT * FROM bans WHERE $nip >= first AND $nip <= last") or sqlerr(__FILE__, __LINE__);
+    if (mysql_num_rows($res) > 0)
     {
       header("HTTP/1.0 403 Forbidden");
       echo("<html><body><h1>403 Forbidden</h1>Unauthorized IP address.</body></html>\n");
@@ -110,35 +109,35 @@ function userlogin() {
      $id = (int) $_COOKIE["uid"];
       if (!$id || !preg_match('/[a-f0-9]{32}/', $_COOKIE["pass"]) )
         return;
-    $res = mysqli_query($mysqli,"SELECT * FROM users WHERE id = $id AND enabled='yes' AND status = 'confirmed'");// or die(mysqli_error($mysqli));
-    $row = mysqli_fetch_array($res);
+    $res = mysql_query("SELECT * FROM users WHERE id = $id AND enabled='yes' AND status = 'confirmed'");// or die(mysql_error());
+    $row = mysql_fetch_array($res);
     if (!$row)
         return;
     $sec = hash_pad($row["secret"]);
     if ($_COOKIE["pass"] !== $row["passhash"])
         return;
-    mysqli_query($mysqli,"UPDATE users SET last_access='" . get_date_time() . "', ip=".sqlesc($ip)." WHERE id=" . $row["id"]);// or die(mysqli_error($mysqli));
+    mysql_query("UPDATE users SET last_access='" . get_date_time() . "', ip=".sqlesc($ip)." WHERE id=" . $row["id"]);// or die(mysql_error());
     $row['ip'] = $ip;
     $GLOBALS["CURUSER"] = $row;
 }
 
 function autoclean() {
-    global $autoclean_interval, $mysql_host, $mysql_user, $mysql_pass, $mysql_db;
+    global $autoclean_interval;
 
     $now = time();
     $docleanup = 0;
-    $mysqli = new mysqli($mysql_host, $mysql_user, $mysql_pass);
-    $res = mysqli_query($mysqli,"SELECT value_u FROM avps WHERE arg = 'lastcleantime'");
-    $row = mysqli_fetch_array($res);
+
+    $res = mysql_query("SELECT value_u FROM avps WHERE arg = 'lastcleantime'");
+    $row = mysql_fetch_array($res);
     if (!$row) {
-        mysqli_query($mysqli,"INSERT INTO avps (arg, value_u) VALUES ('lastcleantime',$now)");
+        mysql_query("INSERT INTO avps (arg, value_u) VALUES ('lastcleantime',$now)");
         return;
     }
     $ts = $row[0];
     if ($ts + $autoclean_interval > $now)
         return;
-    mysqli_query($mysqli,"UPDATE avps SET value_u=$now WHERE arg='lastcleantime' AND value_u = $ts");
-    if (!mysqli_affected_rows($mysqli))
+    mysql_query("UPDATE avps SET value_u=$now WHERE arg='lastcleantime' AND value_u = $ts");
+    if (!mysql_affected_rows())
         return;
 
     docleanup();
@@ -1281,14 +1280,15 @@ function int_check($value,$stdhead = false, $stdfood = true, $die = true, $log =
 foreach ($_GET as $check_url) {
 	if (!is_array($check_url)) {
 		$check_url = str_replace("\"", "", $check_url);
-		if ((preg_match("#<[^>]*script*\"?[^>]*>#", $check_url)) || (preg_match("#<[^>]*object*\"?[^>]*>#", $check_url)) ||
-			(preg_match("#<[^>]*iframe*\"?[^>]*>#", $check_url)) || (preg_match("#<[^>]*applet*\"?[^>]*>#", $check_url)) ||
-			(preg_match("#<[^>]*meta*\"?[^>]*>#", $check_url)) || (preg_match("#<[^>]*style*\"?[^>]*>#", $check_url)) ||
-			(preg_match("#<[^>]*form*\"?[^>]*>#", $check_url)) || (preg_match("#\([^>]*\"?[^)]*\)#", $check_url))) {
+		if ((eregi("<[^>]*script*\"?[^>]*>", $check_url)) || (eregi("<[^>]*object*\"?[^>]*>", $check_url)) ||
+			(eregi("<[^>]*iframe*\"?[^>]*>", $check_url)) || (eregi("<[^>]*applet*\"?[^>]*>", $check_url)) ||
+			(eregi("<[^>]*meta*\"?[^>]*>", $check_url)) || (eregi("<[^>]*style*\"?[^>]*>", $check_url)) ||
+			(eregi("<[^>]*form*\"?[^>]*>", $check_url)) || (eregi("\([^>]*\"?[^)]*\)", $check_url)) ||
+			(eregi("\"", $check_url))) {
 		die ();
 		}
 	}
 }
-require_once "global.php";
-require_once "html.php";
+require "global.php";
+require "html.php";
 ?>
