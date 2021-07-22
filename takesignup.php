@@ -104,9 +104,10 @@ if (mysqli_errno($GLOBALS["___mysqli_ston"]) == 1062)
     $body = str_replace(array('<#SITENAME#>', '<#USEREMAIL#>', '<#IP_ADDRESS#>', '<#REG_LINK#>'),
     array($FMED['site_name'], $email, $_SERVER['REMOTE_ADDR'], "{$FMED['baseurl']}/confirm.php?id=$id&secret=$psecret"),
     $lang['takesignup_email_body']);
-if ($arr[0])
+if ($arr[0]){
     mail($email, "{$FMED['site_name']} {$lang['takesignup_confirm']}", $body, "{$lang['takesignup_from']} {$FMED['site_email']}");
-    else
+    }else{
     logincookie($id, $wantpasshash);
     header("Refresh: 0; url=ok.php?type=". (!$arr[0]?"sysop":("signup&email=" . urlencode($email))));
+}
 ?>
