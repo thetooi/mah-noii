@@ -1,6 +1,6 @@
 <?php
 error_reporting(0);
-$FMED['baseurl'] = 'http://FMEDition.NeT/';
+$FMED['baseurl'] = 'https://i.toui.cc/';
     $FMED['announce_interval'] = 60 * 30;
     $FMED['user_ratios'] = 0;
     $FMED['connectable_check'] = 0;
@@ -11,9 +11,9 @@ $FMED['baseurl'] = 'http://FMEDition.NeT/';
     define ('UC_MODERATOR', 4);
     define ('UC_ADMINISTRATOR', 5);
     define ('UC_SYSOP', 6);
-$FMED['mysql_user'] = "xblade";
-$FMED['mysql_pass'] = "gDu4zFvR8ZRl186B";
-$FMED['mysql_db']   = "xblade";
+    $FMED['mysql_user'] = "mnsql";
+    $FMED['mysql_pass'] = "?Bbtw856";
+    $FMED['mysql_db']   = "tracker";
     $agent = $_SERVER["HTTP_USER_AGENT"];
 if (ereg("^Mozilla\\/", $agent) ||
     ereg("^Opera\\/", $agent) ||
