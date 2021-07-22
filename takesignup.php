@@ -108,8 +108,6 @@ if ($arr[0]){
     mail($email, "{$FMED['site_name']} {$lang['takesignup_confirm']}", $body, "{$lang['takesignup_from']} {$FMED['site_email']}");
     }else{
     logincookie($id, $wantpasshash);
-
-    echo $wantpasshash."-".$secret;
-    //header("Refresh: 0; url=ok.php?type=". (!$arr[0]?"sysop":("signup&email=" . urlencode($email))));
+    header("Refresh: 0; url=ok.php?type=". (!$arr[0]?"sysop":("signup&email=" . urlencode($email))));
 }
 ?>
